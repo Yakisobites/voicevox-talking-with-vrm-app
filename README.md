@@ -68,7 +68,7 @@ npm run dev
 
 ### 背景画像（kyousitu.jpg）
 
-- 配布元: https://github.com/Yakisobites/voicevox-vrm-app/releases/download/1.0.1/kyousitu.zip
+- 配布元: [https://github.com/Yakisobites/voicevox-vrm-app/releases/download/1.0.1/kyousitu.zip](https://github.com/Yakisobites/voicevox-talking-with-vrm-app/releases/download/1.0/kyousitu.zip)
 - 配置先: `frontend/public/kyousitu.jpg`
 
 ### VOICEVOX音声（春日部つむぎ）
