@@ -1,0 +1,19 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/bin/python",
+  "ty.configuration": {
+    "environment": {
+      "python": "./backend/.venv",
+      "python-version": "3.12",
+      "root": ["./backend"]
+    }
+  },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[python]": {
+    "editor.defaultFormatter": null
+  },
+  "editor.inlayHints.enabled": "on",
+  "js/ts.inlayHints.variableTypes.enabled": true,
+  "js/ts.inlayHints.parameterNames.enabled": "all",
+  "js/ts.inlayHints.functionLikeReturnTypes.enabled": true
+}

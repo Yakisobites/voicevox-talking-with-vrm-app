@@ -1,0 +1,67 @@
+services:
+  app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - WATCHPACK_POLLING=true
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - VOICEVOX_BASE_URL=http://voicevox:50021
+      - VOICEVOX_DEFAULT_SPEAKER_ID=${VOICEVOX_DEFAULT_SPEAKER_ID:-8}
+      - ALLOWED_ORIGIN=http://localhost:5173
+      - OPENAI_DEFAULT_MODEL=${OPENAI_DEFAULT_MODEL:-gpt-4o-mini}
+      - GEMINI_DEFAULT_MODEL=${GEMINI_DEFAULT_MODEL:-gemini-2.5-flash}
+      - OLLAMA_DEFAULT_MODEL=${OLLAMA_DEFAULT_MODEL:-gemma3:4b}
+      - ASSISTANT_PERSONA_PROMPT=${ASSISTANT_PERSONA_PROMPT:-}
+    depends_on:
+      ollama:
+        condition: service_started
+      ollama-init:
+        condition: service_completed_successfully
+      voicevox:
+        condition: service_started
+
+  ollama:
+    image: ollama/ollama:latest
+    expose:
+      - "11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  ollama-init:
+    image: ollama/ollama:latest
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_DEFAULT_MODEL=${OLLAMA_DEFAULT_MODEL:-gemma3:4b}
+    depends_on:
+      ollama:
+        condition: service_started
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "until ollama list >/dev/null 2>&1; do echo 'waiting for ollama...'; sleep 2; done;
+      ollama pull ${OLLAMA_DEFAULT_MODEL}"
+
+  voicevox:
+    image: voicevox/voicevox_engine:latest
+    ports:
+      - "50021:50021"
+
+volumes:
+  ollama_data:
